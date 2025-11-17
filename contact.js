@@ -1,3 +1,5 @@
-import { POST, OPTIONS } from './server.js';
+const { handleContact } = require('./server.js');
 
-export { POST, OPTIONS };
+module.exports = {
+  handleContact
+};
