@@ -1,9 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { handleContact } from './server.js';
-
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+const { handleContact } = require('./server.js');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
