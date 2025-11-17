@@ -9,14 +9,23 @@ const handleContact = async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    // Create transporter
+    // Create transporter with proper Gmail configuration
     const transporter = nodemailer.createTransporter({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
+
+    // Verify connection before sending
+    await transporter.verify();
+    console.log('SMTP connection verified successfully');
 
     const mailOptions = {
       from: email,
@@ -25,11 +34,12 @@ const handleContact = async (req, res) => {
       text: 'Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message
     };
 
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.messageId);
     res.status(200).json({ success: 'Message sent successfully' });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ error: 'Failed to send message' });
+    res.status(500).json({ error: 'Failed to send message: ' + error.message });
   }
 };
 
