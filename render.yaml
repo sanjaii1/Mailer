@@ -1,0 +1,21 @@
+services:
+  # Web Service
+  - type: web
+    name: mailer-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    # Add your environment variables here through Render dashboard
+    # EMAIL_USER, EMAIL_PASS, EMAIL_TO
+
+  # Optional: PostgreSQL if you need a database later
+  # - type: pserv
+  #   name: mailer-db
+  #   plan: free
+  #   env: pg
