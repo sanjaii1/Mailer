@@ -7,7 +7,6 @@ console.log('serverModule:', serverModule);
 console.log('handleContact type:', typeof serverModule.handleContact);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -17,12 +16,24 @@ app.use(express.json());
 app.post('/api/contact', serverModule.handleContact);
 app.options('/api/contact', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');      
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.status(200).end();
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Health check route
+app.get('/', (req, res) => {
+  res.json({ message: 'Mailer API is running' });
 });
+
+// Start server
+const PORT = process.env.PORT || 3001;
+
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
